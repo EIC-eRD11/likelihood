@@ -1,0 +1,161 @@
+void hXYPerEvt() {
+	gROOT->Reset();
+	gStyle->SetOptStat(0);
+	gStyle->SetOptFit(111);
+	gStyle->SetPalette(1);
+	gStyle->SetOptDate(0);
+
+	gStyle->SetCanvasColor(kWhite);
+	gStyle->SetFrameFillStyle(1001);
+	gStyle->SetFrameFillColor(kWhite);
+	gStyle->SetPadBorderMode(0);
+	gStyle->SetPadColor(kWhite);
+	gStyle->SetStatColor(kWhite);
+	gStyle->SetPadTickX(1);
+	gStyle->SetPadTickY(1);
+	// gStyle->SetLabelSize(.05,"X");
+	// gStyle->SetLabelSize(.05,"Y");
+	gStyle->SetLabelColor(1,"X");
+	gStyle->SetLabelColor(1,"Y");
+
+
+	TFile *ff = new TFile("../../output/DB_5GeV_Theta5_Phi45.root");
+	TH2D *hNEvtvsP = (TH2D*) ff->Get("hNEvtvsP");
+	TH2D *hPiXY = (TH2D*) ff->Get("hPiXY");
+	TH2D *hKaonXY = (TH2D*) ff->Get("hKaonXY");
+	TH2D *hProtonXY = (TH2D*) ff->Get("hProtonXY");
+
+	int NEvtPiBin = hNEvtvsP->FindBin(0,5.);
+	int NEvtKaonBin = hNEvtvsP->FindBin(1,5.);
+	int NEvtProtonBin = hNEvtvsP->FindBin(2,5.);
+
+	int NEvtPi = hNEvtvsP->GetBinContent(NEvtPiBin);
+	int NEvtKaon = hNEvtvsP->GetBinContent(NEvtKaonBin);
+	int NEvtProton = hNEvtvsP->GetBinContent(NEvtProtonBin);
+
+	hPiXY->Sumw2();
+	hKaonXY->Sumw2();
+	hProtonXY->Sumw2();
+
+	hPiXY->Scale(1./NEvtPi);
+	hKaonXY->Scale(1./NEvtKaon);
+	hProtonXY->Scale(1./NEvtProton);
+
+	TCanvas *c1 = new TCanvas("c1","c1",700,700);
+        c1->Divide(2,2);
+
+        c1->cd(1);
+        gPad->SetTopMargin(0.12);
+        gPad->SetBottomMargin(0.12);
+        gPad->SetLeftMargin(0.12);
+        gPad->SetRightMargin(0.12);
+        TLegend *leg = new TLegend(0.05,0.35,0.8,0.75);
+        leg->SetTextSize(0.04);
+        leg->SetLineColor(4);
+        leg->SetLineStyle(1);
+        leg->SetLineWidth(1);
+        leg->SetFillColor(0);
+        leg->SetMargin(0.1);
+        leg->SetFillStyle(0);
+        leg->SetTextAlign(12);
+        leg->SetBorderSize(0);
+        leg->AddEntry(hPiXY,"         photonsensor: 44 mm x 44 mm        ","");
+        leg->AddEntry(hPiXY,"photonsensor segmentation: 1 mm x 1 mm","");
+        leg->Draw();
+
+	c1->cd(2);
+	gPad->SetTopMargin(0.13);
+	gPad->SetBottomMargin(0.13);
+	gPad->SetLeftMargin(0.13);
+	gPad->SetRightMargin(0.13);
+        hPiXY->GetXaxis()->SetTitle("X (mm)");
+        hPiXY->GetYaxis()->SetTitle("Y (mm)");
+        hPiXY->GetZaxis()->SetTitle("n_{e^{-}} per event");
+        hPiXY->GetZaxis()->SetRangeUser(0.,0.05);
+	hPiXY->GetYaxis()->SetTitleColor(kBlack);
+	hPiXY->GetZaxis()->SetTitleSize(0.04);
+	hPiXY->GetYaxis()->SetTitleSize(0.04);
+	hPiXY->GetXaxis()->SetTitleSize(0.035);
+	hPiXY->GetZaxis()->SetTitleOffset(1.7);
+	hPiXY->GetYaxis()->SetTitleOffset(1.7);
+	hPiXY->GetXaxis()->SetTitleOffset(1.7);
+	hPiXY->SetTitle();
+	hPiXY->Draw("surf");
+	TLegend *leg = new TLegend(0.07,0.92,0.88,1.0);
+	leg->SetTextSize(0.04);
+	leg->SetLineColor(4);
+	leg->SetLineStyle(1);
+	leg->SetLineWidth(1);
+	leg->SetFillColor(0);
+	leg->SetMargin(0.1);
+	leg->SetFillStyle(0);
+	leg->SetTextAlign(12);
+	leg->SetBorderSize(0);
+	leg->AddEntry(hPiXY,"5 GeV Pion, shoot angle: #theta=5^{o}, #phi=45^{o}","");
+	leg->Draw();
+
+	c1->cd(3);
+	gPad->SetTopMargin(0.13);
+	gPad->SetBottomMargin(0.13);
+	gPad->SetLeftMargin(0.13);
+	gPad->SetRightMargin(0.13);
+        hKaonXY->GetXaxis()->SetTitle("X (mm)");
+        hKaonXY->GetYaxis()->SetTitle("Y (mm)");
+        hKaonXY->GetZaxis()->SetTitle("n_{e^{-}} per event");
+        hKaonXY->GetYaxis()->SetTitleColor(kBlack);
+	hKaonXY->GetZaxis()->SetTitleSize(0.04);
+	hKaonXY->GetYaxis()->SetTitleSize(0.04);
+	hKaonXY->GetXaxis()->SetTitleSize(0.035);
+        hKaonXY->GetZaxis()->SetRangeUser(0.,0.05);
+	hKaonXY->GetZaxis()->SetTitleOffset(1.7);
+	hKaonXY->GetYaxis()->SetTitleOffset(1.7);
+	hKaonXY->GetXaxis()->SetTitleOffset(1.7);
+        hKaonXY->SetTitle();
+        hKaonXY->Draw("surf");
+	TLegend *leg = new TLegend(0.07,0.92,0.88,1.0);
+        leg->SetTextSize(0.04);
+        leg->SetLineColor(4);
+        leg->SetLineStyle(1);
+        leg->SetLineWidth(1);
+        leg->SetFillColor(0);
+        leg->SetMargin(0.1);
+        leg->SetFillStyle(0);
+        leg->SetTextAlign(12);
+        leg->SetBorderSize(0);
+        leg->AddEntry(hKaonXY,"5 GeV Kaon, shoot angle: #theta=5^{o}, #phi=45^{o}","");
+        leg->Draw();
+
+	c1->cd(4);
+	gPad->SetTopMargin(0.13);
+	gPad->SetBottomMargin(0.13);
+	gPad->SetLeftMargin(0.13);
+	gPad->SetRightMargin(0.13);
+        hProtonXY->GetXaxis()->SetTitle("X (mm)");
+        hProtonXY->GetYaxis()->SetTitle("Y (mm)");
+        hProtonXY->GetZaxis()->SetTitle("n_{e^{-}} per event");
+        hProtonXY->GetYaxis()->SetTitleColor(kBlack);
+	hProtonXY->GetZaxis()->SetTitleSize(0.04);
+	hProtonXY->GetYaxis()->SetTitleSize(0.04);
+	hProtonXY->GetXaxis()->SetTitleSize(0.035);
+        hProtonXY->GetZaxis()->SetRangeUser(0.,0.05);
+	hProtonXY->GetZaxis()->SetTitleOffset(1.7);
+	hProtonXY->GetYaxis()->SetTitleOffset(1.7);
+	hProtonXY->GetXaxis()->SetTitleOffset(1.7);
+        hProtonXY->SetTitle();
+        hProtonXY->Draw("surf");
+	TLegend *leg = new TLegend(0.07,0.92,0.88,1.0);
+        leg->SetTextSize(0.04);
+        leg->SetLineColor(4);
+        leg->SetLineStyle(1);
+        leg->SetLineWidth(1);
+        leg->SetFillColor(0);
+        leg->SetMargin(0.1);
+        leg->SetFillStyle(0);
+        leg->SetTextAlign(12);
+        leg->SetBorderSize(0);
+        leg->AddEntry(hProtonXY,"5 GeV Proton, shoot angle: #theta=5^{o}, #phi=45^{o}","");
+        leg->Draw();
+
+	c1->cd();
+	c1->SaveAs("figs/XY2DBin.pdf");
+}

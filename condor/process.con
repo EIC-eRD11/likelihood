@@ -1,0 +1,16 @@
+Universe        = vanilla
+GetEnv          = True
+Notification    = Error
+Notify_user     = lxue@rcf.rhic.bnl.gov
+Priority        = +0
+Initialdir      = /data7/xueliang/eRD11/modular_rich/likelihood/condor 
+Executable      = $(Initialdir)/process.csh
+Arguments       = $(Process)
+Log             = $(Initialdir)/logs/eic_modular_rich_e-_$(Process).log
+Output          = $(Initialdir)/logs/eic_modular_rich_e-_$(Process).out
+Error           = $(Initialdir)/logs/eic_modular_rich_e-_$(Process).err
+
++Experiment     = "phenix"
++Job_Type       = "gsu"
+
+Queue    4
